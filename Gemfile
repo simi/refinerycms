@@ -4,6 +4,7 @@ gemspec
 
 # Add i18n support.
 gem 'refinerycms-i18n', '~> 2.0.0'
+gem 'rails', '3.2.7.rc1'
 
 # Database Configuration
 platforms :jruby do
