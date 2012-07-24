@@ -1,6 +1,5 @@
 require 'refinerycms-core'
 require 'rspec-rails'
-require 'factory_girl_rails'
 
 module Refinery
   autoload :TestingGenerator, 'generators/refinery/testing/testing_generator'
@@ -14,7 +13,7 @@ module Refinery
       # Load the factories of all currently loaded extensions
       def load_factories
         Refinery.extensions.each do |extension_const|
-          if extension_const.respond_to?(:factory_paths)
+          if extension_const.respond_to? :factory_paths
             extension_const.send(:factory_paths).each do |path|
               FactoryGirl.definition_file_paths << path
             end

@@ -17,14 +17,14 @@ module Refinery
         #
         #   Refinery::Testing::Railtie.load_dummy_tasks('/users/reset/code/mynew_app')
         def load_dummy_tasks(app_root)
-          @target_extension_path = Pathname.new(app_root.to_s)
+          @target_extension_path = Pathname.new app_root.to_s
           load 'refinery/tasks/testing.rake'
         end
       end
 
       config.after_initialize do
-        Refinery.register_extension(Refinery::Testing)
-        Testing.load_factories
+        Refinery.register_extension Refinery::Testing
+        Testing.load_factories if defined? ::FactoryGirl
       end
     end
   end

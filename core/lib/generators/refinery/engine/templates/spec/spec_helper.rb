@@ -27,10 +27,10 @@ end
 def each_run
   Rails.cache.clear
   ActiveSupport::Dependencies.clear
-  FactoryGirl.reload
+  FactoryGirl.reload if defined? ::FactoryGirl
 
   # Requires supporting files with custom matchers and macros, etc,
-  # in ./support/ and its subdirectories including factories.
+  # in ./support/ and its subdirectories including factories if defined.
   ([Rails.root.to_s] | ::Refinery::Plugins.registered.pathnames).map{|p|
     Dir[File.join(p, 'spec', 'support', '**', '*.rb').to_s]
   }.flatten.sort.each do |support_file|

@@ -3,7 +3,13 @@ module Refinery
     module RequestMacros
       module Authentication
         def refinery_login_with(factory)
-          let!(:logged_in_user) { Factory.create(factory) }
+          let!(:logged_in_user) {
+            if defined? ::FactoryGirl
+              FactoryGirl.create factory
+            else
+              mock factory
+            end
+          }
 
           before do
             login_as logged_in_user, :scope => :refinery_user

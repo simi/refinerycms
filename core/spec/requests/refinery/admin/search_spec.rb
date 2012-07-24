@@ -31,7 +31,7 @@ module Refinery
       end
 
       describe "page extension" do
-        before { FactoryGirl.create(:page, :title => "Ugis Ozols") }
+        before { Page.create :title => "Ugis Ozols" }
 
         it "returns found page" do
           visit refinery.admin_pages_path

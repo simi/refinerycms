@@ -75,7 +75,7 @@ module Refinery
       end
 
       context "edit/update" do
-        let!(:resource) { FactoryGirl.create(:resource) }
+        let!(:resource) { resource_factory }
 
         it "updates file" do
           visit refinery.admin_resources_path
@@ -87,7 +87,9 @@ module Refinery
           page.should have_content("Download current file or replace it with this one...")
           page.should have_selector("a[href*='/refinery/resources']")
 
-          attach_file "resource_file", Refinery.roots(:'refinery/resources').join("spec/fixtures/refinery_is_awesome2.txt")
+          new_file = Refinery.roots(:'refinery/resources').
+                          join("spec/fixtures/refinery_is_awesome2.txt")
+          attach_file "resource_file", new_file
           click_button "Save"
 
           page.should have_content("Refinery Is Awesome2")
@@ -96,7 +98,7 @@ module Refinery
       end
 
       context "destroy" do
-        let!(:resource) { FactoryGirl.create(:resource) }
+        let!(:resource) { resource_factory }
 
         it "removes file" do
           visit refinery.admin_resources_path
@@ -110,7 +112,7 @@ module Refinery
       end
 
       context "download" do
-        let!(:resource) { FactoryGirl.create(:resource) }
+        let!(:resource) { resource_factory }
 
         it "succeeds" do
           visit refinery.admin_resources_path

@@ -4,9 +4,7 @@ module Refinery
   describe 'layout' do
     refinery_login_with :refinery_user
 
-    let(:home_page) do
-      FactoryGirl.create :page, :title => 'Home', :link_url => '/'
-    end
+    let(:home_page) { Page.create :title => 'Home', :link_url => '/' }
 
     describe 'body' do
       it "id is the page's canonical id" do
