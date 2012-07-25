@@ -2,10 +2,11 @@ require 'spec_helper'
 
 module Refinery
   describe Resource do
-    let(:resource) { FactoryGirl.create(:resource) }
+    let(:resource) { resource_factory }
 
     context "with valid attributes" do
       it "should create successfully" do
+        resource.save
         resource.errors.should be_empty
       end
     end
@@ -20,6 +21,7 @@ module Refinery
       end
 
       it "should contain its filename at the end" do
+        resource.save
         resource.url.split('/').last.should == resource.file_name
       end
     end
@@ -73,44 +75,45 @@ module Refinery
     end
 
     describe "validations" do
+      let(:file) {
+        Refinery.roots(:'refinery/resources').
+                 join("spec/fixtures/refinery_is_awesome.txt")
+      }
+
       describe "valid #file" do
         before do
-          @file = Refinery.roots(:'refinery/resources').join("spec/fixtures/refinery_is_awesome.txt")
-          Resources.max_file_size = (File.read(@file).size + 10)
+          Resources.max_file_size = File.read(file).size + 10
         end
 
         it "should be valid when size does not exceed .max_file_size" do
-          Resource.new(:file => @file).should be_valid
+          resource_factory(file).should be_valid
         end
       end
 
       describe "too large #file" do
+        let(:resource) { resource_factory(file) }
         before do
-          @file = Refinery.roots(:'refinery/resources').join("spec/fixtures/refinery_is_awesome.txt")
-          Resources.max_file_size = (File.read(@file).size - 10)
-          @resource = Resource.new(:file => @file)
+          Resources.max_file_size = File.read(file).size - 10
         end
 
         it "should not be valid when size exceeds .max_file_size" do
-          @resource.should_not be_valid
+          resource.should_not be_valid
         end
 
         it "should contain an error message" do
-          @resource.valid?
-          @resource.errors.should_not be_empty
-          @resource.errors[:file].should == ["File should be smaller than #{Resources.max_file_size} bytes in size"]
+          resource.valid?
+          resource.errors.should_not be_empty
+          resource.errors[:file].should == ["File should be smaller than #{Resources.max_file_size} bytes in size"]
         end
       end
 
       describe "invalid argument for #file" do
-        before do
-          @resource = Resource.new
-        end
+        let(:resource) { Resource.new }
 
         it "has an error message" do
-          @resource.valid?
-          @resource.errors.should_not be_empty
-          @resource.errors[:file].should == ["You must specify file for upload"]
+          resource.valid?
+          resource.errors.should_not be_empty
+          resource.errors[:file].should == ["You must specify file for upload"]
         end
       end
     end
