@@ -7,7 +7,7 @@ module Refinery
             if defined? ::FactoryGirl
               FactoryGirl.create factory
             else
-              mock factory
+              mock factory # wat
             end
           }
 
@@ -17,17 +17,17 @@ module Refinery
         end
 
         def login_refinery_user
-          Refinery.deprecate(:login_refinery_user, :when => '2.2', :replacement => 'refinery_login_with :refinery_user')
+          Refinery.deprecate(:login_refinery_user, :when => '2.2', :replacement => 'refinery_login_with :refinery')
           refinery_login_with(:refinery_user)
         end
 
         def login_refinery_superuser
-          Refinery.deprecate(:login_refinery_superuser, :when => '2.2', :replacement => 'refinery_login_with :refinery_superuser')
+          Refinery.deprecate(:login_refinery_superuser, :when => '2.2', :replacement => 'refinery_login_with :refinery, :superuser')
           refinery_login_with(:refinery_superuser)
         end
 
         def login_refinery_translator
-          Refinery.deprecate(:login_refinery_translator, :when => '2.2', :replacement => 'refinery_login_with :refinery_translator')
+          Refinery.deprecate(:login_refinery_translator, :when => '2.2', :replacement => 'refinery_login_with :refinery, :translator')
           refinery_login_with(:refinery_translator)
         end
       end
