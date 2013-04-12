@@ -199,6 +199,7 @@ module Refinery
         it 'should make and use a new friendly_id' do
           visit '/products/my-product/cool-one'
           current_path.should == '/products/my-product/cool-one'
+          find("#body_content_title").text.should == page_cs.title
         end
       end
     end

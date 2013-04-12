@@ -33,7 +33,8 @@ module Refinery
 
     # Docs for friendly_id http://github.com/norman/friendly_id
     friendly_id_options = {:use => [:reserved, :globalize], :reserved_words => %w(index new session login logout users refinery admin images wymiframe)}
-    friendly_id_options.safe_deep_merge!({:use => [:scoped], :scope => :parent}) if ::Refinery::Pages.scope_slug_by_parent
+    friendly_id_options.deep_merge!({:use => [:scoped], :scope => :parent}) if ::Refinery::Pages.scope_slug_by_parent
+
     friendly_id :custom_slug_or_title, friendly_id_options
 
     has_many :parts,
