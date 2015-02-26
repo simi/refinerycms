@@ -1,34 +1,26 @@
 language: ruby
 cache: bundler
 bundler_args: --without development
-before_script: "bin/rake refinery:testing:dummy_app"
+
+# if DEPLOY is set skip test prepare
+before_script: 'test "$DEPLOY" = "" && bin/rake refinery:testing:dummy_app || echo "skipping dummy app"'
+
+# if DEPLOY is set skip test run
 script:
-  - "bin/rspec $EXTENSION/spec"
-env:
-  - DB=postgresql EXTENSION=core
-  - DB=postgresql EXTENSION=pages
-  - DB=postgresql EXTENSION=images
-  - DB=postgresql EXTENSION=resources
-  - DB=mysql EXTENSION=core
-  - DB=mysql EXTENSION=pages
-  - DB=mysql EXTENSION=images
-  - DB=mysql EXTENSION=resources
-notifications:
-  email: true
-  irc:
-    use_notice: true
-    skip_join: true
-    channels:
-      - "irc.freenode.org#refinerycms"
-  campfire:
-    on_success: always
-    on_failure: always
-    rooms:
-      - secure: "X5X39BTgXacSdc32F8mIjJKPqm5dZzmgZfJ14qYpJeMETTdA5JfByt2uCfU8\njJkkxT+XGWta0bSSlRIHQJO6pK26U94A95VYDX0jNuneKEnsoAsqJ6U0VY6v\nH5oxXMAZ2perP/FH9ZsPNR+ulyFfbMQCeGPJw5AXKZQqzf6qPOI="
-  webhooks:
-    - https://webhooks.gitter.im/e/b5d48907cdc89864b874
+  - 'test "$DEPLOY" = "true" && echo "deploying" || bin/rspec $EXTENSION/spec'
 rvm:
   - 2.2
-  - 2.1
-  - 2.0.0
+matrix:
+  include:
+    - rvm: 2.2
+      env: DEPLOY=true
 sudo: false
+
+# deploy edge demo only for non-PR master commit
+after_success:
+  - 'test "$TRAVIS_BRANCH" = master && test "$TRAVIS_PULL_REQUEST" = false && bash ci/deploy-edge.sh'
+addons:
+  ssh_known_hosts:
+  - github.com
+  - dokku.refinerycms.com
+

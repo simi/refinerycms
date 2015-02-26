@@ -92,3 +92,4 @@ Gemfile.lock
 *.txt
 
 *.orig
+ci/refinerybot_dsa
